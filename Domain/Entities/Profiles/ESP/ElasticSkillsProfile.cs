@@ -1,37 +1,61 @@
 ﻿using Domain.Entities.Aggregates;
 using Domain.Entities.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Domain.Entities.LearningElements;
+using Domain.Entities.TreeBasedCurriculum.Course;
+using Domain.Entities.TreeBasedCurriculum.Lesson;
 
-namespace Domain.Entities.Profiles.ESP
+namespace Domain.Entities.Profiles.ESP;
+
+
+public class ElasticSkillsProfile : LearningProfile
 {
-    public class ElasticSkillsProfile : LearningProfile
+    public List<LearningBlock> LearningHistory = new();
+
+    public override void Adjust(LearningAction learningAction)
     {
-        public List<ProgressBlock> ProgressBlocks = new();
+        LearningBlock lb = new(learningAction.LearningElement, learningAction.Experience, DateTime.Now);
+        LearningHistory.Add(lb);
+    }
 
-        public override void Adjust(LearningAction learningAction)
+    public List<LearningElement> GetAllTouchedFrom(Course course)
+    {
+        return LearningHistory.ConvertAll(o => o.LearningElement)
+                .Where(o => o is CourseLearningElement)
+                .Where(o => course.AllLearningElements.Contains(o))
+                .ToList();
+    }
+
+    public List<LearningElement> GetAllTouchedFrom(Lesson lesson)
+    {
+        throw new NotImplementedException();
+    }
+
+    public int GetTotalExperienceOf(LearningElement element)
+    {
+        return LearningHistory.Where(o => o.LearningElement == element).Sum(o => o.TotalExperience);
+    }
+
+
+    // ============ Display functions =============
+
+    public void DisplayTotalExperienceOf(LearningElement element)
+    {
+        Console.WriteLine($"Total experience gained in {element.Title}: {GetTotalExperienceOf(element)}");
+    }
+
+    public void DisplayAllBlocks()
+    {
+        foreach(var block in LearningHistory) 
         {
-            if(!ProgressBlocks.ConvertAll(o=>o.LearningElement).Contains(learningAction.LearningElement))
-            {
-                ProgressBlock progressBlock = new(learningAction.LearningElement);
-                ProgressBlocks.Add(progressBlock);
-                return;
-            }
-            var searchedBlock = ProgressBlocks.Find(o => o.LearningElement == learningAction.LearningElement);
-            searchedBlock.Experience += 5;
-            searchedBlock.LastInteraction = DateTime.Now;
-            LastUpadate = DateTime.Now;
+            Console.WriteLine($"{block.LearningElement.Title} - experience: {block.TotalExperience}");
         }
+    }
 
-        public void Display()
+    public void DisplayBulk()
+    {
+        foreach (var learningElem in LearningHistory.ConvertAll(o=>o.LearningElement).Distinct())
         {
-            foreach(var block in ProgressBlocks) 
-            {
-                Console.WriteLine($"{block.LearningElement.Title} - experience: {block.Experience}");
-            }
+            Console.WriteLine($"Total experience in {learningElem.Title} : {GetTotalExperienceOf(learningElem)}");
         }
     }
 }

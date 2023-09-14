@@ -12,7 +12,7 @@ namespace Domain.Entities.Users
     // an end-user of the platform (a.k.a. client)
     public class StudentUser : User
     {
-        public ElasticLearnerProfile Elp { get; set; } = new();
+        public ElasticLearningProfile Elp { get; set; } = new();
         public ElasticSkillsProfile Esp { get; set; } = new();
         public StudentUser(string username) : base(username) { }
 

@@ -39,16 +39,20 @@ internal class Program
 
         Console.WriteLine("\n------------\nLearning simulation\n------------");
 
-        StudentUser user = new StudentUser("Alex Kutasjenko");
-        for (int i = 0; i <= 3; i++)
+        StudentUser user = new("Alex Kutasjenko");
+        for (int i = 0; i <= 10; i++)
         {
             LearningElement learningElement = course.GetLessonFor(user);
             Console.WriteLine("Picked lesson:" + learningElement.Title);
 
             LearningAction learningAction = new(user, learningElement);
+            learningAction.SimulateRandom();
             learningAction.Finalize();
 
             Console.WriteLine("Studend has ended action: " + learningElement.Title);
         }
+        Console.WriteLine("\n------------\nESP display:\n-----------------\n");
+
+        user.Esp.DisplayBulk();
     }
 }
