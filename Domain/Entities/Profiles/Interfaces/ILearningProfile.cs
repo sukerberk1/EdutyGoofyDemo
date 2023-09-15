@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Entities.Common
+namespace Domain.Entities.Profiles.Interfaces
 {
-    public abstract class LearningProfile
+    public interface ILearningProfile
     {
-        public DateTime LastUpadate { get; set; } = DateTime.Now;
+        public DateTime LastUpadate { get; set; }
         public abstract void Adjust(LearningAction action);
     }
 }

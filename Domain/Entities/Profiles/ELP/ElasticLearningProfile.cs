@@ -1,5 +1,6 @@
 ﻿using Domain.Entities.Aggregates;
 using Domain.Entities.Common;
+using Domain.Entities.Profiles.Interfaces;
 using Domain.Enums;
 using Domain.ValueObjects;
 using System;
@@ -10,15 +11,17 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities.Profiles.ELP
 {
-    public class ElasticLearningProfile : LearningProfile
+    public class ElasticLearningProfile : ILearningProfile
     {
         // !!! If There was a change made to IntelligenceType Enum, old ELPs would not change! -- change how it works
         Dictionary<IntelligenceType, int> Intelligence = Enum.GetValues(typeof(IntelligenceType))
     .Cast<IntelligenceType>()
     .ToDictionary(enumValue => enumValue, _ => 0);
 
+        private DateTime lastUpdate = DateTime.Now;
+        public DateTime LastUpadate { get => lastUpdate; set => lastUpdate = value; }
 
-        public override void Adjust(LearningAction action)
+        public void Adjust(LearningAction action)
         {
             // TODO!
         }

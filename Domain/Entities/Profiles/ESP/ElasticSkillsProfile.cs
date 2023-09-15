@@ -1,17 +1,22 @@
 ﻿using Domain.Entities.Aggregates;
 using Domain.Entities.Common;
 using Domain.Entities.LearningElements;
+using Domain.Entities.Profiles.Interfaces;
 using Domain.Entities.TreeBasedCurriculum.Course;
 using Domain.Entities.TreeBasedCurriculum.Lesson;
 
 namespace Domain.Entities.Profiles.ESP;
 
 
-public class ElasticSkillsProfile : LearningProfile
+public class ElasticSkillsProfile : ILearningProfile
 {
     public List<LearningBlock> LearningHistory = new();
+    public HashSet<SkillBlock> SkillBlocks = new();
 
-    public override void Adjust(LearningAction learningAction)
+    private DateTime lastUpdate = DateTime.Now;
+    public DateTime LastUpadate { get => lastUpdate; set => lastUpdate = value; }
+
+    public void Adjust(LearningAction learningAction)
     {
         LearningBlock lb = new(learningAction.LearningElement, learningAction.Experience, DateTime.Now);
         LearningHistory.Add(lb);
